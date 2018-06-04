@@ -1,5 +1,5 @@
 from flask_blog import app, db
-from flask import render_template, redirect, flash, url_for
+from flask import render_template, redirect, flash, url_for, session, abort
 from blog.form import SetupForm
 from author.models import Author
 from blog.models import Blog
@@ -19,8 +19,10 @@ def index():
 @app.route('/admin')
 @login_required
 def admin():
-	return render_template('blog/admin.html')
-
+	if session.get('username'):
+		return render_template('blog/admin.html')
+	else:
+		about(403)
 @app.route('/setup', methods=('GET', 'POST'))
 def setup():
 	form = SetupForm()
